@@ -15,23 +15,31 @@ class HomeViewModel extends BaseViewModel {
   init(BuildContext context){
     print("init provider");
     provider = Provider.of<ProductProvider>(context);
-    fetch(context);
+    fetch();
   }
 
   List<Products> _products = [];
 
+  bool get loading => _loading;
+  bool _loading=false;
+
+
   List<Products> get products => _products;
 
-  fetch(BuildContext context)  {
+  fetch()  {
    print("try to call api");
    provider.loaddata();
+   _loading=provider.isloading;
+   notifyListeners();
  }
 
-  Future<void> setdata(BuildContext context) async {
+  Future<void> setdata() async {
     var s=provider.products;
     print("p length${s.length}");
     _products=await provider.products;
     notifyListeners();
     print("_p length${_products.length}");
+    _loading=provider.isloading;
+    notifyListeners();
   }
   }
